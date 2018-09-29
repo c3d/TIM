@@ -37,7 +37,7 @@ draw_line xd, yd, xa, ya ->
         if d >= 0 then
             x := x + sx
             d := d - dy
-        else
+        if d < 0 then
             y := y + sy
             d := d + dx
 
