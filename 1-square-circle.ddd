@@ -1,0 +1,14 @@
+texture_mag_filter "nearest"
+line_color "black"
+color "white"
+
+SIZE -> 16
+frame_texture SIZE,SIZE,
+    square 0, 0, SIZE
+    line -SIZE/2,-SIZE/2, SIZE/2, SIZE/2
+rectangle -200, 0, 300,300
+
+frame_texture SIZE,SIZE,
+    line_color "black"
+    circle 0, 0, SIZE/2
+rectangle 200, 0, 300,300

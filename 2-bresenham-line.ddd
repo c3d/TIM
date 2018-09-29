@@ -1,0 +1,54 @@
+// Démonstration de l'algorithme de lignes de Bresenham en Tao3D
+
+// Débranche le lissage de l'affichage
+texture_mag_filter "nearest"
+
+// On dessine dans une texture de 32x32 pixels afin de bien voir le résultat
+frame_texture 32, 32,
+    color "black"
+    draw_line -10, -10, 12, 15
+
+    color "red"
+    draw_line -10, 0, 15, 0
+
+    color "green"
+    draw_line 0, -10, 0, 15
+
+    color "blue"
+    draw_line -15, 20, -5, -15
+
+// Affiche la texture dans un rectangle plus grand (zoom d'un facteur 16)
+color "white"
+rectangle 0, 0, 32*16, 32*16
+
+// La fonction qui dessine une ligne
+draw_line xd, yd, xa, ya ->
+    dx := Abs (xa - xd)
+    dy := Abs (ya - yd)
+    sx := Sign (xa - xd)
+    sy := Sign (ya - yd)
+    d := dx - dy
+
+    x := xd
+    y := yd
+
+    while x <> xa or y <> ya loop
+        plot x, y
+        if d >= 0 then
+            x := x + sx
+            d := d - dy
+        else
+            y := y + sy
+            d := d + dx
+
+// La fonction qui dessine un pixel aux coordonnées x, y
+plot x, y ->
+    // En Tao3D, les coordonnées sont au centre des pixels donc ajouter 0.5
+    rectangle x + 0.5, y + 0.5, 1, 1
+
+// Calcul de la valeur absolue et du signe
+Abs X  -> if X < 0 then -X else X
+Sign X -> if X < 0 then -1 else if X > 0 then 1 else 0
+
+
+key "Space" -> refresh 0
