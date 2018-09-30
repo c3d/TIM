@@ -1,0 +1,57 @@
+// Démonstration de l'algorithme de cercles de Bresenham en Tao3D
+// Cas général capable de tracer des ellipses
+
+// Débranche le lissage de l'affichage
+texture_mag_filter "nearest"
+
+// On dessine dans une texture de 32x32 pixels afin de bien voir le résultat
+frame_texture 128, 128,
+
+    color "darkgreen"
+    draw_circle 0, 0, 63
+    draw_circle 0, 0, 60
+
+    color "black"
+    draw_circle 0, 0, 15
+
+    color "red"
+    draw_circle 3, 5, 3
+
+    color "blue"
+    draw_circle -5, 4, 6
+
+// Affiche la texture dans un rectangle plus grand (zoom d'un facteur 16)
+color "white"
+rectangle 0, 0, 32*16, 32*16
+
+// La fonction qui dessine une ellipse
+draw_circle xc, yc, r ->
+    d := r/2
+    x  := r
+    y  := 0
+
+    while x >= y loop
+        plot xc + x, yc + y
+        plot xc - x, yc + y
+        plot xc + x, yc - y
+        plot xc - x, yc - y
+        plot xc + y, yc + x
+        plot xc - y, yc + x
+        plot xc + y, yc - x
+        plot xc - y, yc - x
+
+        y := y + 1
+        d := d - y
+        if d < 0 then
+            x := x - 1
+            d := d + x
+
+// La fonction qui dessine un pixel aux coordonnées x, y
+plot x, y ->
+    // En Tao3D, les coordonnées sont au centre des pixels donc ajouter 0.5
+    rectangle x + 0.5, y + 0.5, 1, 1
+
+Abs X -> if X < 0 then -X else X
+NegSign X -> if X > 0 then -1 else 1
+
+key "Space" -> refresh 0
