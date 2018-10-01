@@ -1,5 +1,4 @@
 // Démonstration de l'algorithme de cercles de Bresenham en Tao3D
-// Cas général capable de tracer des ellipses
 
 // Débranche le lissage de l'affichage
 texture_mag_filter "nearest"
