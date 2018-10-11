@@ -1,0 +1,36 @@
+SZ -> 48
+IMGS -> 16
+R -> 0.0
+G -> 0.0
+B -> 0.0
+A -> 0.0
+K -> 0
+
+color "white"
+pixel_at X, Y ->
+    frame_texture "Image", IMGS, IMGS,
+        color "white"
+        texture "SmallApple.png"
+        rectangle IMGS, IMGS
+        frame_pixel X, IMGS-1-Y, R, G, B, A
+
+pixel_at 0, 0
+texture_mag_filter "nearest"
+rectangle SZ*IMGS, SZ*IMGS
+
+font "Arial", 12,bold
+color "black"
+texture ""
+align 50%
+vertical_align 50%
+for X in 0..IMGS-1 loop
+   for Y in 0..IMGS-1 loop
+       locally
+           pixel_at X, Y
+       text_box (X - IMGS/2) * SZ + SZ/2, (Y - IMGS/2) * SZ + SZ/2,  SZ, SZ,
+           color "darkred";   paragraph "" & integer(R*255)
+           color "darkgreen"; paragraph "" & integer(G*255)
+           color "darkblue";  paragraph "" & integer(B*255)
+           anchor
+               color R+0, G+0, B+0
+               rectangle 15, 20, 10, 10

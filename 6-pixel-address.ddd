@@ -1,0 +1,18 @@
+a(l,c) -> 2000 + 4 * (l * 16 + c)
+
+SZ -> 48
+IMGS -> 16
+
+color "white"
+texture_mag_filter "nearest"
+texture "SmallApple.png"
+rectangle SZ * IMGS, SZ * IMGS
+
+font "Arial", 12,bold
+color "black"
+align 50%
+vertical_align 50%
+for X in 0..IMGS-1 loop
+   for Y in 0..IMGS-1 loop
+       text_box (X - IMGS/2) * SZ + SZ/2, (IMGS/2 - Y) * SZ - SZ/2,  SZ, SZ,
+           text "" & a(Y,X)
