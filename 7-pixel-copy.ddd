@@ -1,0 +1,6 @@
+texture_mag_filter "nearest"
+texture "image.png"
+shader_program
+    fragment_shader_file "7-pixel-copy.fs"
+rectangle texture_width, texture_height
+refresh 1

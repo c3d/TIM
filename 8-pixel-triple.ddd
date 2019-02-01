@@ -1,0 +1,7 @@
+texture_mag_filter "nearest"
+texture_wrap true, true
+texture "image.png"
+shader_program
+    fragment_shader_file "8-pixel-triple.fs"
+rectangle texture_width, texture_height
+refresh 1
