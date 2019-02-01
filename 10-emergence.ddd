@@ -1,0 +1,207 @@
+import Slides
+import Animate
+import SeyesTheme
+
+theme "Seyes"
+
+// ----------------------------------------------------------------------------
+pill_slide "Un événement aléatoire",
+// ----------------------------------------------------------------------------
+    subtitle "Incertitude : devinez quelle couleur va arriver?"
+    scale 2
+    random_pill
+
+
+// ----------------------------------------------------------------------------
+pill_slide "Deux événements aléatoires",
+// ----------------------------------------------------------------------------
+    subtitle "Deux incertitudes indépendantes: 4 états possibles"
+    scale 2
+    translate_x -50
+    random_pill
+    translate_x 100
+    random_pill
+
+// ----------------------------------------------------------------------------
+pill_slide "Trois événements aléatoires",
+// ----------------------------------------------------------------------------
+    subtitle "La probabilité d'une configuration donnée décroît exponentiellement"
+    scale 2
+    random_pill
+    translate_x -100
+    random_pill
+    translate_x 200
+    random_pill
+
+// ----------------------------------------------------------------------------
+pill_slide "Vingt cinq événements aléatoires",
+// ----------------------------------------------------------------------------
+    subtitle "Les états les plus ""particuliers"" deviennent presque impossibles"
+    pills
+
+
+// ----------------------------------------------------------------------------
+pill_slide "Les lois cachées dans le désordre",
+// ----------------------------------------------------------------------------
+    subtitle "Émergence d'une loi malgré l'incertitude"
+    locally
+        translate_x -250
+        pills
+    locally
+        translate 250, -250, 0
+        draw_histogram
+
+    locally
+        compute_smooth_step
+        use_step
+    refresh 0.5 - 0.49 * fade_at(smooth_step, 1)
+    at_step 2
+
+key "Right" -> skip 1
+key "Left" -> skip -1
+
+
+// ============================================================================
+//
+//    Pills
+//
+// ============================================================================
+
+count "#3E2"   -> 0
+total "#3E2"   -> 0
+count "#E32"     -> 0
+total "#E32"     -> 0
+
+SIZE->2
+COUNT->(2*SIZE+1)^2
+
+increment X:integer -> X := X + 1
+add X:integer, Y:integer -> X := X + Y
+zero X:integer -> X := 0
+
+pill Color:text ->
+    locally
+        color Color
+        texture "AquaButton.png"
+        circle 0, 0, 40
+        increment count Color
+
+random_pill ->
+    pill (if random(-1.0, 1.0) >= 0.0 then "#3E2" else "#E32")
+
+pills ->
+    zero count "#3E2"
+    zero count "#E32"
+
+    for Y in -SIZE..SIZE loop
+        for X in -SIZE..SIZE loop
+            locally
+                translate X * 100, Y * 100, 0
+                random_pill
+
+    add total "#3E2", count "#3E2"
+    add total "#E32", count "#E32"
+
+
+data histogram
+histogram_idx -> 0
+histogram_max -> 100
+
+clear_histogram ->
+    for I in 0..COUNT loop
+        histogram_idx := I
+        histogram[histogram_idx] := 0 + 0
+
+draw_histogram ->
+    histogram_idx := count "#3E2"
+    increment histogram[histogram_idx + 0]
+    draw_histogram_bar with 0..COUNT
+
+draw_histogram_bar I:integer ->
+    histogram_idx := I
+    color_hsv 12 * I, 0.7, 0.8
+    offset_rectangle -200 + histogram_idx * 20, 0, 16, 2 * histogram[histogram_idx + 0] * 300 / histogram_max + 5
+    if histogram_max < histogram[histogram_idx + 0] then
+        histogram_max := histogram[histogram_idx + 0]
+
+offset_rectangle X:real, Y:real, W:real, H:real ->
+    rectangle X, Y + H/2, W, H
+
+// ----------------------------------------------------------------------------
+draw_pie_chart X:real, Y:real, S:real, Red:real, Green:real ->
+// ----------------------------------------------------------------------------
+    locally
+        light 0
+        light_position 1000, 1000, 1000
+        translate X, Y, 0.4*S
+        rotate_x -55
+        extrude_depth 40
+
+        if Red + Green > 0 then
+            color "#E32"
+            ellipse_sector 0, 0, S, S, 0, Red * 360 / (Red + Green)
+            color "#3E2"
+            ellipse_sector 0, 0, S, S, 0, -Green * 360 / (Red + Green)
+
+
+// ----------------------------------------------------------------------------
+pill_slide Name, Body ->
+// ----------------------------------------------------------------------------
+    picture_slide Name,
+
+        on "pageentry",
+            zero total "#3E2"
+            zero total "#E32"
+            clear_histogram
+
+        contents 0,
+            zero count "#3E2"
+            zero count "#E32"
+
+            locally Body
+
+            add total "#3E2", count "#3E2"
+            add total "#E32", count "#E32"
+
+            stats_box "Ce tour", -700, -50, 300, 600, 30, count "#E32", count "#3E2"
+            stats_box "Total",    700, -50, 300, 600, -30, total "#E32", total "#3E2"
+
+            refresh 0.5
+
+// ----------------------------------------------------------------------------
+stats_box Title, X, Y, W, H, RotY, Red:real, Green:real ->
+// ----------------------------------------------------------------------------
+    locally
+        translate X, Y, 0
+        rotate_y RotY * (1.0 + 0.3 * sin page_time)
+
+        locally
+            translate_z -20
+            color "white", 0.2
+            line_color "yellow"
+            line_width 3
+            extrude_depth 15
+            rounded_rectangle 0, 0, W, H, 20
+
+        draw_pie_chart 0, 0, 200, Red, Green
+
+        light 0
+        light_position 100, 100, 1000
+
+        font "Impact", bold, 50
+        extrude_depth 20
+        align 0.5
+        vertical_align -0.05
+        text_box 0, 0, W, H,
+            paragraph Title
+
+        font "Impact", bold, 40
+        extrude_depth 10
+        vertical_align 0.9
+        text_box 0, 0, W, H,
+            color "#E32"
+            paragraph text("Rouge: " & Red)
+            color "#3E2"
+            paragraph text("Vert: " & Green)
+            color "white"
+            paragraph text("Total: " & (Red + Green))
