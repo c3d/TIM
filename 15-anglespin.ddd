@@ -1,0 +1,42 @@
+SIZE -> 128
+SIZE2 -> 100
+
+round R:real -> (integer(R * 100) * 0.01)
+
+spin_matrix X:integer, Y:integer, Base:text, T:real ->
+    frame_texture SIZE, SIZE,
+        locally
+            color Base
+            line_width 3
+            line_color "black"
+            rectangle SIZE, SIZE
+        text_box 0, 0, SIZE, SIZE,
+            font "Arial", 30
+            align 50%
+            vertical_align 50%
+            color "white"
+            render round T
+
+    locally
+        color "white", 0.8 * abs T + 0.1
+        cube X * SIZE, Y * SIZE, 0, SIZE2, SIZE2, SIZE2
+
+sind X:real -> sin(X * pi / 180)
+cosd X:real -> cos(X * pi / 180)
+
+spin_matrix T ->
+    spin_matrix 0, 0, "black",   cosd(T/2)
+    spin_matrix 0, 1, "red",     sind(T/2)
+    spin_matrix 1, 0, "green",  -sind(T/2)
+    spin_matrix 1, 1, "blue",    cosd(T/2)
+
+rotate_x 0.1 * mouse_y
+rotate_y -0.1 * mouse_x
+
+scale 60%
+
+translate_z -SIZE * 36 / 2 - 100
+for T in 0..36 loop
+    locally
+        translate_z SIZE * T
+        spin_matrix T * 20 + 360

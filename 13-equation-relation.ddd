@@ -1,0 +1,55 @@
+texture_mag_filter "nearest"
+color "white"
+
+translate -128, -110, 0
+
+line_color "darkblue"
+line_width 3
+line_arrow -10, 0, none, 256, 0, arrowhead
+line_arrow 0, -10, none, 0, 256, arrowhead
+line_width 1
+for I in 0..15 loop
+    line I * 16, -5, I * 16, 5
+    line -5, I * 16, 5, I * 16
+line_color "darkblue", 30%
+for I in 0..15 loop
+    line I * 16, -5, I * 16, 256
+    line -5, I * 16, 256, I * 16
+
+locally
+    SIZE -> 32
+    frame_texture SIZE,SIZE,
+        line_color "black", 30%
+        line_width 4
+        line 0, 0, 320, 200
+        line_color "black", 60%
+        line_width 1
+        line 0, 0, 320, 200
+        color "green"
+        line_width 0
+        if mouse_x > 0 then
+            circle 5.5, 3.5, 0.5
+            circle 1.5, 1.5, 0.5
+            circle 3.5, 1.5, 0.5
+            circle 7.5, 3.5, 0.5
+            circle 9.5, 5.5, 0.5
+            circle 10.5, 7.5, 0.5
+            circle 12.5, 8.5, 0.5
+            circle 13.5, 7.5, 0.5
+            circle 14.5, 10.5, 0.5
+    rectangle 0, 0, 512, 512
+
+line_width 2
+line_color "red"
+line 0, 0, 320, 200
+
+line_color "transparent"
+color "darkblue"
+
+font "Arial", 20
+align 50%
+vertical_align 50%
+text_box -20, 240, 40, 40,
+    text "F"
+text_box 240, -20, 40, 40,
+    text "a"

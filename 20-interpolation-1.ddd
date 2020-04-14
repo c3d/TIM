@@ -1,0 +1,7 @@
+texture_mag_filter (if mouse_x > 0 then "nearest" else "linear")
+frame_texture 32, 32,
+    color "white"
+    image 0, 0, 1, 1, "emoji.png"
+
+color "white"
+rectangle 0, 0, 32*16, 32*16

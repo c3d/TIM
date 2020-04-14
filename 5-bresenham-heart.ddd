@@ -1,0 +1,62 @@
+// Démonstration de l'algorithme de Bresenham généralisé en Tao3D
+// Dans l'exemple ici, on dessine un coeur
+// Equation originale: f(x,y) = x^2 + (y-x^{2/3})^2=1
+// Derivée partielle en x: dx(x,y) = 2x - 4/3(y-x^{2/3})x^{-1/3}
+// Derivée partielle en y: dy(x,y) = 2 (y-x^{2/3})
+
+// Débranche le lissage de l'affichage
+texture_mag_filter "nearest"
+
+// On dessine dans une texture de 32x32 pixels afin de bien voir le résultat
+frame_texture 32, 32,
+
+    color "black"
+    draw_heart 15
+
+// Affiche la texture dans un rectangle plus grand (zoom d'un facteur 16)
+color "white"
+rectangle 0, 0, 32*16, 32*16
+
+// Dérivér partielle en x
+third -> 0.33333333333333
+dfdx x,y -> 2*x - 4*third*(y-x^(2*third))*x^(-third)
+dfdy x,y -> 2*(y - x^(2*third))
+
+// La fonction qui dessine une ellipse
+draw_heart r ->
+    x  := 0
+    y  := -r
+    sx := 1
+    sy := 1
+    finished := 0
+
+    count := 0
+    while finished = 0 and count < 1000 loop
+        count := count + 1
+
+        plot x, y
+        s  := NegSign d
+
+        dx := d + dfdx(x/r,y/r)
+        dy := d + a2 * (2*sy*y + 1)
+        if Abs dy <= Abs dx then
+            y := y + sy
+            d := dy
+        else
+            x := x + sx
+            d := dx
+
+        if x = 0 then sy := -sy
+        if y = 0 then sx := -sx
+
+        if x = a and y = 0 then finished := 1
+
+// La fonction qui dessine un pixel aux coordonnées x, y
+plot x, y ->
+    // En Tao3D, les coordonnées sont au centre des pixels donc ajouter 0.5
+    rectangle x + 0.5, y + 0.5, 1, 1
+
+Abs X -> if X < 0 then -X else X
+NegSign X -> if X > 0 then -1 else 1
+
+key "Space" -> refresh 0

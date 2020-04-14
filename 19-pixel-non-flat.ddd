@@ -1,0 +1,30 @@
+texture_mag_filter "nearest"
+frame_texture 512, 512,
+    color "darkred"
+    for X in -10..10 loop
+        rectangle 25 * X, 0, 1, 512
+    color "darkgreen"
+    for Y in -10..10 loop
+        rectangle 0, 25 * Y, 512, 1
+    color "black"
+    font "Arial", 16, bold
+    align 50%
+    vertical_align 50%
+    for X in -5..4 loop
+        for Y in -5..4 loop
+            text_box 50 * X + 25, 50 * Y + 25, 60, 30,
+                text "" & ((Y + 5) * 10 + (X + 5))
+
+page "One",
+    shader_program
+        fragment_shader_file "19-pixel-non-flat.fs"
+    shader_set rotate := mouse_x / 100.0
+    rectangle texture_width, texture_height
+
+page "Two",
+    shader_program
+        fragment_shader_file "19-pixel-non-flat-2.fs"
+    shader_set rotate := mouse_x / 100.0
+    rectangle texture_width, texture_height
+
+refresh 1

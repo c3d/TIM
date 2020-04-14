@@ -1,0 +1,35 @@
+COUNT -> 25
+
+key "Left"  -> COUNT := COUNT - 1; refresh 0
+key "Right" -> COUNT := COUNT + 1; refresh 0
+
+histogram_scale := 1
+draw_histogram
+text_box -200, 200, 200, 100,
+    paragraph "Count: " & COUNT
+    paragraph "Scale: " & histogram_scale
+
+histogram_scale -> 1.0
+
+draw_histogram ->
+    locally
+        translate -300, -300, 0
+        scale 600 / COUNT, 1.0 / histogram_scale, 1
+        draw_histogram_bar with 0..COUNT
+
+combinations N:integer, K:integer ->
+    R -> 1.0
+    R := 1.0
+    for I in 1..K loop
+        R := R * (N+1-I) / I
+    if histogram_scale < R then
+        histogram_scale := R
+        refresh 0.0
+    R + 0
+
+draw_histogram_bar I:integer ->
+    color_hsv 360.0 * I / COUNT, 0.7, 0.8
+    offset_rectangle I, 0, 0.8, combinations(COUNT, I) * 600
+
+offset_rectangle X:real, Y:real, W:real, H:real ->
+    rectangle X, Y + H/2, W, H

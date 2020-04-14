@@ -1,0 +1,7 @@
+texture_mag_filter "nearest"            // Débranche le filtre bilinéaire
+texture_wrap true, true                 // Permet aux images de se répéter
+texture "image.png"                     // Nom de l'image à charger
+shader_program                          // Charge un programme GLSL
+    fragment_shader_file "pixel.fs"     // Code des pixels dans pixel.fs
+rectangle texture_width, texture_height // Dessine l'image résultant
+refresh 1

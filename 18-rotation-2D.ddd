@@ -1,0 +1,110 @@
+// Démonstration de l'algorithme de cercles de Bresenham en Tao3D
+// Cas général capable de tracer des ellipses
+
+frame_page "Image",
+    color "white"
+    image 0, 0, 1, 1, "emoji.png"
+
+frame_page "Translation",
+    color "white"
+    image 0, 0, 1, 1, "emoji.png"
+    color "#88F"
+    image 10, 3, 1, 1, "emoji.png"
+
+frame_page "Rotation - Cercle",
+    color "lightgray"
+    draw_ellipse 0, 0, 15, 15
+    color "red"
+    plot 13, 8
+    color "red", 30%
+    draw_line 0, 0, 13, 8
+
+frame_page "Rotation",
+    locally
+        rotate_z 27
+        color "white"
+        image 0, 0, 1, 1, "emoji.png"
+    color "red"
+    plot 13, 8
+    color "red", 30%
+    draw_line -13, -8, 13, 8
+
+frame_page "Changement d'échelle",
+    locally
+        color "white"
+        image 0, 0, 1, 1, "emoji.png"
+        color "#9F9", 70%
+        scale 12.0 / 32
+        image 0, 0, 1, 1, "emoji.png"
+    color "green"
+    draw_line -16, -6, 16, 6
+
+
+frame_page Title, Body ->
+    page Title,
+        texture_mag_filter "nearest"
+        frame_texture 32, 32, Body
+        color "white"
+        rectangle 0, 0, 32*16, 32*16
+
+
+// La fonction qui dessine une ellipse
+draw_ellipse xc, yc, a, b ->
+    a2 := a*a
+    b2 := b*b
+    d := 0
+
+    x  := a
+    y  := 0
+    sx := NegSign x
+    sy := NegSign y
+    finished := 0
+
+    while finished = 0 loop
+        plot xc + x, yc + y
+        s  := NegSign d
+
+        dx := d + b2 * (2*sx*x + 1)
+        dy := d + a2 * (2*sy*y + 1)
+        if Abs dy <= Abs dx then
+            y := y + sy
+            d := dy
+        else
+            x := x + sx
+            d := dx
+
+        if x = 0 then sy := -sy
+        if y = 0 then sx := -sx
+
+        if x = a and y = 0 then finished := 1
+
+// La fonction qui dessine une ligne
+draw_line xd, yd, xa, ya ->
+    dx := Abs (xa - xd)
+    dy := Abs (ya - yd)
+    sx := Sign (xa - xd)
+    sy := Sign (ya - yd)
+    d := dx - dy
+
+    x := xd
+    y := yd
+
+    while x <> xa or y <> ya loop
+        plot x, y
+        if d >= 0 then
+            x := x + sx
+            d := d - dy
+        if d < 0 then
+            y := y + sy
+            d := d + dx
+
+// La fonction qui dessine un pixel aux coordonnées x, y
+plot x, y ->
+    // En Tao3D, les coordonnées sont au centre des pixels donc ajouter 0.5
+    rectangle x + 0.5, y + 0.5, 1, 1
+
+Abs X -> if X < 0 then -X else X
+NegSign X -> if X > 0 then -1 else 1
+Sign X -> if X > 0 then 1 else -1
+
+key "Space" -> refresh 0

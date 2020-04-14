@@ -1,0 +1,97 @@
+import ObjectLoader
+
+light 0
+light_position -100, 100, 1000
+
+page "Vue de coté",
+    crayons 0.1 * mouse_x
+
+page "Vue de haut",
+    crayons_pythagore 0.1 * mouse_x
+
+page "Vue répétée",
+    rotate_x 90
+    for I in 0..7 loop
+        crayons I * 20
+        show 0.7
+
+
+page "Translation, Rotation, Echelle",
+    locally
+        translate_x -400
+        caption "Translation"
+        crayon "blue"
+    locally
+        caption "Rotation"
+        rotate_y -60
+        rotate_z 10
+        crayon "red"
+    locally
+        translate_x 400
+        caption "Échelle"
+        rotate_y -60
+        rotate_z 10
+        scale 150%
+        crayon "green"
+
+
+
+cosd X -> cos(X * pi / 180)
+sind X -> sin(X * pi / 180)
+
+crayon Color ->
+    locally
+        locally
+            rotate_y 90
+            color Color
+            cylinder 0, 0, 0, 10, 10, 300
+
+            color "lightyellow"
+            cone 0, 0, 165, 10, 10, 30
+
+            color Color
+            cone 0, 0, 175, 3.5, 3.5, 9
+
+crayons Angle:real ->
+    locally
+        translate_x -200
+        crayon "red"
+
+    locally
+        translate_x 200
+        rotate_y Angle
+        crayon "blue"
+
+crayons_pythagore Angle:real ->
+    locally
+        rotate_x 90
+        crayons Angle
+
+    locally
+        translate 200, 0, 20
+        locally
+            color "blue", 20%
+            line_width 3
+            line_color "cyan"
+            right_triangle 0, 0, -300 * cosd Angle, 300 * sind Angle
+
+        font "Arial", 20
+        color "darkblue"
+        text_box 0, -150 * sind Angle, 0, 60, 60,
+            vertical_align 100%
+            align 50%
+            text "a"
+        text_box 150 * cosd Angle, 0, 60, 60,
+            align 100%
+            vertical_align 50%
+            text "b"
+        text_box 0, 0, 60, 60,
+            align 0%
+            vertical_align 0%
+            text "c"
+
+caption Title ->
+    text_box 0, -200, 300, 100,
+        align 50%
+        font "Arial", 40
+        text Title
