@@ -1,0 +1,51 @@
+arm Color, L1, L2, A1, A2 ->
+    locally
+        rotate_z A1
+        color Color, 0%
+        rectangle 0, -L1/2, 5, L1
+        translate_y -L1
+        rotate_z A2
+        rectangle 0, -L2/2, 5, L2
+        translate_y -L2
+        color Color, 40%
+        circle 0, 0, 5
+
+pendulum Color, X, Y, L1, L2, A1, A2, F1, F2, B1, B2 ->
+    locally
+        translate X, Y, 0
+        arm Color, L1, L2, B1 + A1 * sin(F1 * time), B2 + A2 * sin(F2 * time)
+pendulum Color, X, Y, L1, L2, A1, A2, F1, F2 ->
+    pendulum Color, X, Y, L1, L2, A1, A2, F1, F2, 0, 0
+
+
+pendulum_page Title, Body ->
+    page Title,
+        color "white"
+        locally
+            line_color "black", 50%
+            color "transparent"
+            for I in 0..15 loop
+                rectangle I * 100, 2000
+                rectangle 2000, I * 100
+
+        canvas window_width, window_height + page_number mod 2,
+            Body
+            refresh 0
+        rectangle window_width, window_height
+
+pendulum_page "Repos", false
+
+pendulum_page "Quasi-linear law",
+    pendulum "red", -7000, 7000, 7000, 2900,    7,   0, 0.772, 1, 45, 0
+
+pendulum_page "Two-dimensional algebraic law",
+    pendulum "blue",    0,    0,  500,    0,  120,   0,     1, 1
+
+pendulum_page "Noisy law",
+    pendulum "green",   0,    0,  300,  150,  720,  60,     1, 31.987
+
+pendulum_page "Quasi-random law",
+    pendulum "purple",  0,    0,  800,  650,  200, 360, 82.31, 93.515
+
+pendulum_page "More random law",
+    pendulum "orange",  0,    0,  800,  800,  36000, 36000, 8.31,  9583.112
