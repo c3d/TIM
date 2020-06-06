@@ -1,0 +1,116 @@
+grid N ->
+    locally
+        scale 30%
+        texture "AquaButton.png"
+        translate -(N-1)*texture_width/2, -(N-1)*texture_height/2, 0
+        for X in 0..N-1 loop
+            for Y in 0..N-1 loop
+                color_select page_label, X, Y
+                rectangle X*texture_width, Y*texture_height, texture_width, texture_height
+
+color_select "Green",   X, Y -> color "#3E2"
+color_select "Red",     X, Y -> color "#E32"
+color_select Other,     X, Y -> color pixel_color(X,Y)
+
+page "Green",
+    grid 8
+page "Red",
+    grid 8
+page "Random",
+    on "pageentry",
+        init_pixels
+        flip pixel(0,0)
+    locally
+        flip pixel(random(0,8), random(0,8))
+        grid 8
+        refresh 0.05
+
+page "Diagonal",
+    Pos -> 0
+    on "pageentry",
+        init_pixels
+        flip pixel(0,0)
+        Pos := 0
+    locally
+        flip pixel(Pos, Pos)
+        Pos := (Pos + 1) mod 8
+        flip pixel(Pos, Pos)
+        grid 8
+        refresh 0.5
+
+
+incr N:integer -> if N < 7 then N := N + 1
+decr N:integer -> if N > 0 then N := N - 1
+
+page "Random Movement",
+    PosX -> 0
+    PosY -> 0
+    on "pageentry",
+        init_pixels
+        flip pixel(0,0)
+        PosX := 0
+        PosY := 0
+    locally
+        flip pixel(PosX, PosY)
+        random_move random(0,4)
+        flip pixel(PosX, PosY)
+        grid 8
+        refresh 0.05
+        random_move 0 -> incr PosX
+        random_move 1 -> incr PosY
+        random_move 2 -> decr PosX
+        random_move 3 -> decr PosY
+        random_move N -> false
+
+page "Energy exchange",
+    on "pageentry",
+        init_pixels
+        flip pixel(0,0)
+    on "key:Space",
+        flip pixel(random(0,7), random(0,7))
+    gravity -> 30
+    on "key:+",
+        gravity := gravity + 1
+    on "key:-",
+        gravity := gravity - 1
+    locally
+        for X in 0..7 loop
+            for Y in 0..7 loop
+                if pixel(X, Y) = 1 then
+                    random_bump random(0,gravity), X, Y
+        grid 8
+        refresh 0.05
+
+        random_bump 0, X, Y -> bump X, Y, 1, 0
+        random_bump 1, X, Y -> bump X, Y, 0, 1
+        random_bump 2, X, Y -> bump X, Y, -1, 0
+        random_bump 3, X, Y -> bump X, Y, 0, -1
+        random_bump N, X, Y -> if N > 30 then bump X, Y, 0, -1
+        bump X, Y, DX, DY ->
+            if X+DX >= 0 and X+DX < 8 and Y+DY >= 0 and Y+DY < 8 then
+                if pixel(X+DX, Y+DY) = 0 then
+                    flip pixel(X, Y)
+                    flip pixel(X+DX, Y+DY)
+        text_box 0, 200, 320, 100,
+            font "Arial", 20
+            paragraph "Gravity: " & gravity
+
+pixel_color X:integer,Y:integer -> color_index pixel(X,Y)
+pixel X:integer,Y:integer -> pixel_internal X+Y*8
+data pixels
+pixel_index -> 0
+pixel_internal N:integer ->
+    pixel_index := N
+    pixels[pixel_index]
+pixel_internal_init N:integer ->
+    pixel_index := N
+    pixels[pixel_index] := 0+0
+color_index 0 -> "#3E2"
+color_index 1 -> "#E32"
+color_index X -> "#E82"
+
+init N:integer -> N := 0 + 0
+flip N:integer -> N := 1 - N
+
+init_pixels -> init_pixel with 0..63
+init_pixel N:integer -> pixel_internal_init N

@@ -1,0 +1,14 @@
+import WaterSurface
+
+SIZE -> 1024
+
+page "Test",
+    color "white"
+    // Bind underwater texture
+    locally
+        texture_unit 1
+        texture "Eau.jpg"
+        colored_water_surface "water", SIZE, SIZE
+        time
+    if mouse_buttons <> 0 then
+        add_drop "water", mouse_x / SIZE, mouse_y / SIZE, 1.0, 5.5

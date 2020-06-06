@@ -15,13 +15,13 @@ frame_texture 512, 512,
             text_box 50 * X + 25, 50 * Y + 25, 60, 30,
                 text "" & ((Y + 5) * 10 + (X + 5))
 
-page "One",
+page "Non-linear transform",
     shader_program
         fragment_shader_file "19-pixel-non-flat.fs"
-    shader_set rotate := mouse_x / 100.0
+    shader_set rotate := mouse_x / 5.0
     rectangle texture_width, texture_height
 
-page "Two",
+page "Non-continuous transform",
     shader_program
         fragment_shader_file "19-pixel-non-flat-2.fs"
     shader_set rotate := mouse_x / 100.0

@@ -1,0 +1,148 @@
+a -> 0
+b -> 0
+c -> 0
+d -> 0
+e -> 0
+f -> 0
+g -> 0
+h -> 0
+
+n0000 -> (a + c + e + g)
+n0001 -> (a + c + e + h)
+n0010 -> (a + c + f + g)
+n0011 -> (a + c + f + h)
+n0100 -> (a + d + e + g)
+n0101 -> (a + d + e + h)
+n0110 -> (a + d + f + g)
+n0111 -> (a + d + f + h)
+n1000 -> (b + c + e + g)
+n1001 -> (b + c + e + h)
+n1010 -> (b + c + f + g)
+n1011 -> (b + c + f + h)
+n1100 -> (b + d + e + g)
+n1101 -> (b + d + e + h)
+n1110 -> (b + d + f + g)
+n1111 -> (b + d + f + h)
+
+k0000 -> n0000 * a0000
+k0001 -> n0001 * a0001
+k0010 -> n0010 * a0010
+k0011 -> n0011 * a0011
+k0100 -> n0100 * a0100
+k0101 -> n0101 * a0101
+k0110 -> n0110 * a0110
+k0111 -> n0111 * a0111
+k1000 -> n1000 * a1000
+k1001 -> n1001 * a1001
+k1010 -> n1010 * a1010
+k1011 -> n1011 * a1011
+k1100 -> n1100 * a1100
+k1101 -> n1101 * a1101
+k1110 -> n1110 * a1110
+k1111 -> n1111 * a1111
+
+a0000 -> z(b + d + f + h)
+a0001 -> z(b + d + f + g)
+a0010 -> z(b + d + e + h)
+a0011 -> z(b + d + e + g)
+a0100 -> z(b + c + f + h)
+a0101 -> z(b + c + f + g)
+a0110 -> z(b + c + e + h)
+a0111 -> z(b + c + e + g)
+a1000 -> z(a + d + f + h)
+a1001 -> z(a + d + f + g)
+a1010 -> z(a + d + e + h)
+a1011 -> z(a + d + e + g)
+a1100 -> z(a + c + f + h)
+a1101 -> z(a + c + f + g)
+a1110 -> z(a + c + e + h)
+a1111 -> z(a + c + e + g)
+
+total -> n00 + n01 + n10 + n11
+n00 -> n0000 + n0001 + n0010 + n0011
+n01 -> n0100 + n0101 + n0110 + n0111
+n10 -> n1000 + n1001 + n1010 + n1011
+n11 -> n1100 + n1101 + n1110 + n1111
+
+active -> a00 + a01 + a10 + a11
+a00 -> a0000 + a0001 + a0010 + a0011
+a01 -> a0100 + a0101 + a0110 + a0111
+a10 -> a1000 + a1001 + a1010 + a1011
+a11 -> a1100 + a1101 + a1110 + a1111
+
+match -> k00 + k01 + k10 + k11
+k00 -> k0000 + k0001 + k0010 + k0011
+k01 -> k0100 + k0101 + k0110 + k0111
+k10 -> k1000 + k1001 + k1010 + k1011
+k11 -> k1100 + k1101 + k1110 + k1111
+
+none -> total - match
+
+z N:integer -> if N = 0 then 1 else 0
+
+
+key "1" -> a := a + 1; refresh 0
+key "2" -> b := b + 1; refresh 0
+key "3" -> c := c + 1; refresh 0
+key "4" -> d := d + 1; refresh 0
+key "5" -> e := e + 1; refresh 0
+key "6" -> f := f + 1; refresh 0
+key "7" -> g := g + 1; refresh 0
+key "8" -> h := h + 1; refresh 0
+key "Backspace" -> a := b := c := d := e := f := g := h := 0; refresh 0
+
+pix C:integer ->
+    locally
+        color_hsv C * 10, 70%, C * 10%
+        texture "AquaButton.png"
+        scale 30%
+        rectangle texture_width, texture_height
+
+show X, V ->
+    locally
+        translate_x 40 * X - 140
+        text_box 0, 25, 80, 30,
+            align 50%
+            font "Arial", 16
+            render V
+        pix V
+
+
+locally
+    translate_y 100
+    show 0, a
+    show 1, b
+    show 2, c
+    show 3, d
+    show 4, e
+    show 5, f
+    show 6, g
+    show 7, h
+
+locally
+    translate_y 20
+    show 0, k0000
+    show 1, k0001
+    show 2, k0010
+    show 3, k0011
+    show 4, k0100
+    show 5, k0101
+    show 6, k0110
+    show 7, k0111
+locally
+    translate_y -40
+    show 0, k1000
+    show 1, k1001
+    show 2, k1010
+    show 3, k1011
+    show 4, k1100
+    show 5, k1101
+    show 6, k1110
+    show 7, k1111
+
+locally
+    translate_y -140
+    show 0, match
+    show 3, total
+    show 4, active
+    show 7, none

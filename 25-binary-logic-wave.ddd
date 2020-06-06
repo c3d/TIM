@@ -1,0 +1,29 @@
+random_seed 42
+
+X -> 0
+Y -> 0
+Z -> 0
+
+color "transparent"
+line_width 4
+
+translate_x -325
+for I in 0..25 loop
+    line_color "darkred"
+    path
+        move_to 25 * I, 100 + 25 * X
+        X := (random(0,65000) mod 2)
+        line_to 25 * I, 100 + 25 * X
+        line_to 25 * I+25, 100 + 25 * X
+    line_color "darkgreen"
+    path
+        move_to 25 * I, 0 + 25 * Y
+        Y := (random(0,65000) mod 2)
+        line_to 25 * I, 0 + 25 * Y
+        line_to 25 * I+25, 0 + 25 * Y
+    line_color "darkblue"
+    path
+        move_to 25 * I, -100 + 25 * Z
+        Z := X and Y
+        line_to 25 * I, -100 + 25 * Z
+        line_to 25 * I+25, -100 + 25 * Z
