@@ -1,40 +1,89 @@
-color "white"
-locally
-    line_color "black"
-    line_width 2
-    rectangle -150, 0, 200, 100
-    rectangle  150, 0, 200, 100
-texture_mag_filter "nearest"            // Débranche le filtre bilinéaire
-texture_wrap true, true                 // Permet aux images de se répéter
+import Slides
 
-frame_texture 2, 1,
-    translate -0.5, -0.5, 0
-    color "red"
-    rectangle  0, 0, 1, 1
-    color "green"
-    rectangle  1, 0, 1, 1
-
-locally
-    texture_transform
-        translate 0.5, 0.5, 0
-        rotate_z 20 * time
-        translate -0.5, -0.5, 0
-    rectangle -150, 0, 200, 100
-
-textureID -> 0
-textureID := texture
-time
-
-locally
-    frame_texture 2, 1,
+spin_page Name, N ->
+    page Name,
+        // Dessine une boite avec un bord noir
         color "white"
-        texture textureID
-        texture_transform
-            translate 0.5, 0.5, 0
-            rotate_z 20 * time
-            translate -0.5, -0.5, 0
-        rectangle 0, -0.5, 2, 1
-    textureID := texture
+        locally
+            line_color "black"
+            line_width 2
+            rectangle -150, 0, 100, N*100
+            rectangle  150, 0, 100, N*100
 
-texture textureID
-rectangle 150, 0, 200, 100
+            line_width 4
+            line_arrow -250, -230, arrowhead, -250, 230, arrowhead
+            line_width 2
+            for I in -4..4 loop
+                line -255, I * 50, -245, I * 50
+                text_box -280, I * 50, 30, 20,
+                    line_width 0
+                    color "black"
+                    align 50%
+                    vertical_align 50%
+                    font "Arial", 20
+                    if I mod 2 = 0 then
+                        render I/2
+                    else
+                        render I & "/2"
+
+
+        locally
+            color "black"
+            text_box 0, 0, 200, 50,
+                align 50%
+                vertical_align 50%
+                font "Arial", 40
+                text Name
+
+        // Débranche le filtre bilinéaire
+        texture_mag_filter "nearest"
+
+        // Génère la texture "mesure" de base
+        frame_texture 1, N,
+            // 2 = -0.5
+            // 3 = -1.5
+            // 4 = -1.5
+            // 5 = -2.5
+            translate -0.5, 0.5 - (N+1)/2, 0
+            color "red"
+            rectangle  0, 1, 1, 1
+            color "green"
+            rectangle  0, 2, 1, 1
+            color "blue"
+            rectangle  0, 3, 1, 1
+            color "black"
+            rectangle  0, 4, 1, 1
+
+        // Affichage en haute résolution
+        locally
+            texture_transform
+                translate 0.5, 0.5, 0
+                rotate_z 20 * time
+                translate -0.5, -0.5, 0
+            rectangle -150, 0, 100, N*100
+
+        textureID -> 0
+        textureID := texture
+        time
+
+        // Affichage en basse résolution
+        locally
+            frame_texture 1, N,
+                color "white"
+                texture textureID
+                texture_transform
+                    translate 0.5, 0.5, 0
+                    rotate_z 20 * time
+                    translate -0.5, -0.5, 0
+                rectangle -0.5, -0.5 * (N mod 2), 1, N
+            textureID := texture
+
+        texture textureID
+        rectangle 150, 0, 100, N*100
+
+spin_page "Spin 0", 1
+spin_page "Spin 1/2", 2
+spin_page "Spin 1", 3
+spin_page "Spin 3/2", 4
+spin_page "Spin 2", 5
+spin_page "Spin 5/2", 6
