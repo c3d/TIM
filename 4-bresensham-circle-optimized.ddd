@@ -1,9 +1,9 @@
-// Démonstration de l'algorithme de cercles de Bresenham en Tao3D
+// Demonstration of the Bresenham circle algorithm in Tao3D
 
-// Débranche le lissage de l'affichage
+// Disable filtering so that pixels look square and clean on screen
 texture_mag_filter "nearest"
 
-// On dessine dans une texture de 32x32 pixels afin de bien voir le résultat
+// Draw the circle in a 128x128 texture, which we can then enlarge to see pixels
 frame_texture 128, 128,
 
     color "darkgreen"
@@ -19,11 +19,11 @@ frame_texture 128, 128,
     color "blue"
     draw_circle -5, 4, 6
 
-// Affiche la texture dans un rectangle plus grand (zoom d'un facteur 16)
+// Display the texture enlarged four times
 color "white"
-rectangle 0, 0, 32*16, 32*16
+rectangle 0, 0, 128*4, 128*4
 
-// La fonction qui dessine une ellipse
+// Code to draw a circle - That's where the algorithm is implemented
 draw_circle xc, yc, r ->
     d := r/2
     x  := r
@@ -45,11 +45,12 @@ draw_circle xc, yc, r ->
             x := x - 1
             d := d + x
 
-// La fonction qui dessine un pixel aux coordonnées x, y
+// Plot single pixel
 plot x, y ->
-    // En Tao3D, les coordonnées sont au centre des pixels donc ajouter 0.5
+    // In Tao3D, coordinates denote the center of a rectangle, so offset by 0.5
     rectangle x + 0.5, y + 0.5, 1, 1
 
+// Helper functions (that won't convert to real)
 Abs X -> if X < 0 then -X else X
 NegSign X -> if X > 0 then -1 else 1
 
