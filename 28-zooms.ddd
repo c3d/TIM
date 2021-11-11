@@ -1,0 +1,13 @@
+zoom_with_shader Shader:text ->
+    page Shader,
+        texture_mag_filter "nearest"
+        texture "emoji.png"
+        shader_program
+            fragment_shader_file Shader
+        shader_set resolution := window_width, window_height
+        rectangle window_width, window_height
+        refresh 1
+
+zoom_with_shader "28-pixel-copy.fs"
+zoom_with_shader "28-circular.fs"
+zoom_with_shader "28-circular-double.fs"
