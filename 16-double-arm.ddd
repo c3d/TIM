@@ -7,7 +7,7 @@ arm Color, L1, L2, A1, A2 ->
         rotate_z A2
         rectangle 0, -L2/2, 5, L2
         translate_y -L2
-        color Color, 40%
+        color Color, 100%
         circle 0, 0, 5
 
 pendulum Color, X, Y, L1, L2, A1, A2, F1, F2, B1, B2 ->
@@ -36,7 +36,7 @@ pendulum_page Title, Body ->
 pendulum_page "Repos", false
 
 pendulum_page "Quasi-linear law",
-    pendulum "red", -7000, 7000, 7000, 2900,    7,   0, 0.772, 1, 45, 0
+    pendulum "red", -7000, 7000, 7000, 2900,    7,   0, 15.772, 1, 45, 0
 
 pendulum_page "Two-dimensional algebraic law",
     pendulum "blue",    0,    0,  500,    0,  120,   0,     1, 1

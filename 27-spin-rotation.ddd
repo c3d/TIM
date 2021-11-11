@@ -55,16 +55,18 @@ spin_page Name, N ->
             rectangle  0, 4, 1, 1
 
         // Affichage en haute résolution
+        A -> 0.0
+        A := mouse_x
         locally
             texture_transform
                 translate 0.5, 0.5, 0
-                rotate_z 20 * time
+                rotate_z A
                 translate -0.5, -0.5, 0
             rectangle -150, 0, 100, N*100
 
         textureID -> 0
         textureID := texture
-        time
+        seconds
 
         // Affichage en basse résolution
         locally
@@ -73,7 +75,7 @@ spin_page Name, N ->
                 texture textureID
                 texture_transform
                     translate 0.5, 0.5, 0
-                    rotate_z 20 * time
+                    rotate_z A
                     translate -0.5, -0.5, 0
                 rectangle -0.5, -0.5 * (N mod 2), 1, N
             textureID := texture

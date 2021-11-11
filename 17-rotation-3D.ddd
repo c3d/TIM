@@ -28,12 +28,43 @@ page "Translation, Rotation, Echelle",
         crayon "red"
     locally
         translate_x 400
-        caption "Échelle"
+        caption "Scaling"
         rotate_y -60
         rotate_z 10
         scale 150%
         crayon "green"
 
+page "Symmetry",
+    locally
+        rotate_z -20
+        draw_axis
+        translate_x 200
+        crayon "blue"
+
+        color "blue"
+        rotate_z 40
+        rectangle -115, 100, 2, 700
+        rectangle  130, 100, 2, 700
+
+
+    locally
+        rotate_z 20
+        draw_axis
+        translate_x 200
+        crayon "red"
+
+        color "red"
+        rotate_z -40
+        rectangle -115, -100, 2, 700
+        rectangle  130, -100, 2, 700
+
+
+draw_axis ->
+    locally
+        color "transparent"
+        line_color "black"
+        line_width 5
+        line_arrow -100, 0, none, 500, 0, arrowhead
 
 
 cosd X -> cos(X * pi / 180)
@@ -91,7 +122,7 @@ crayons_pythagore Angle:real ->
             text "c"
 
 caption Title ->
-    text_box 0, -200, 300, 100,
+    text_box 0, -100, 300, 100,
         align 50%
         font "Arial", 40
         text Title

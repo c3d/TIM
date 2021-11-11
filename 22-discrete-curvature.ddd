@@ -8,7 +8,7 @@ RX2 -> RX * 50 / S
 MX2 -> MX * 50 / S
 
 color "transparent"
-if page_number > 3 then
+if page_number > 5 then
     line_color "black"
     line_width 15
     line_arrow -450, MY * 50, NONE, 450, RY * 50, ARROWHEAD
@@ -26,13 +26,47 @@ timeline S:integer ->
         rotate_x -45
         line_arrow -150 * S, 0, NONE, 150 * S, 0, ARROWHEAD
 
+moves S:integer ->
+    locally
+        line_color "black"
+        color "transparent"
+        texture ""
+        line_width 3
+        translate 30 * S - 150, 30 * S - 60, 0
+        line_arrow  0,  0, NONE, 60, 0, ARROWHEAD
+        line_arrow 60,  0, NONE, 60, 60, ARROWHEAD
+        line_arrow 60, 60, NONE,  0, 60, ARROWHEAD
+        line_arrow  0, 60, NONE,  0, 0, ARROWHEAD
+
+
+moves_across ->
+    locally
+        line_color "blue"
+        color "transparent"
+        texture ""
+        line_width 3
+        translate 30 * 7 - 150, 30 * 7 - 60, 0
+        line_arrow -30, -30, NONE,  30, -30, ARROWHEAD
+        line_arrow  30, -30, NONE,  30,   0, NONE
+        line_arrow -30,   0, NONE, -30,-30, ARROWHEAD
+        rotate_x -90
+        line_arrow  30,   0, NONE,  30, 30, ARROWHEAD
+        line_arrow -30,   0, NONE, -30, 30, NONE
+        line_arrow  30, 30, NONE, -30, 30, ARROWHEAD
+
 page "Cubic curvature",
-    cubic_curvature false
+    cubic_curvature false, false, false
 
 page "Cubic curvature with line",
-    cubic_curvature true
+    cubic_curvature true, false, false
 
-cubic_curvature Line ->
+page "Cubic curvature with displacements",
+    cubic_curvature false, true, false
+
+page "Cubic curvature with timeline",
+    cubic_curvature false, false, true
+
+cubic_curvature Line, Moves, Timelines ->
     frame_texture 256, 256,
         color "white"
         line_color "black"
@@ -53,6 +87,25 @@ cubic_curvature Line ->
             rectangle 300, 300
             if Line then
                 timeline (if I = 1 then -1 else 1)
+            if Moves then
+                moves I + 2
+
+            if Timelines then
+                locally
+                    color_hsv 120 * I, 80%, 100%, 70%
+                    if I = 1 then rotate_z 90
+                    rectangle -15, 0, 30, 300
+                    if I = 2 then
+                        rotate_z 90
+                        rectangle -15, 0, 30, 300
+
+    if Moves then
+        locally
+            rotate 120, 1,1,1
+            translate_z 150
+            moves_across
+
+
 
 page "Grid alone",
     grid false, false
