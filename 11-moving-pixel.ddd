@@ -1,7 +1,7 @@
-text_box 0, 200, 150, 100,
+text_box 0, 200, 600, 100,
     font "Arial", 50
-    text "Speed=" & SPEED
-refresh 0.1
+    text "Speed=" & SPEED & " Delay=" & DELAY
+refresh DELAY
 
 texture_mag_filter "nearest"
 line_color "black"
@@ -19,6 +19,9 @@ frame_texture SIZE*2,SIZE*2,
 rectangle 300,300
 
 
+DELAY -> 0.1
 SPEED -> 1
 key "Right" -> SPEED := SPEED + 1
 key "Left" -> SPEED := SPEED - 1
+key "Up" -> DELAY := DELAY + 0.05
+key "Down" -> if DELAY > 0 then DELAY := DELAY - 0.05
