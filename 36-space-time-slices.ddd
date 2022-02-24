@@ -1,0 +1,27 @@
+solar_system A ->
+    locally
+        color "lightgreen", 5%
+        line_color "green", 25%
+        translate_z -50
+        rectangle 800, 800
+    locally
+        line_color "blue"
+        line_width 1
+        color "transparent"
+        circle 0, 0, 300
+    locally
+        color "white"
+        texture "sun.jpg"
+        sphere 50
+        rotate_z A
+        translate_x 300
+        rotate_z -A
+        rotate_x 20
+        texture "earth.bmp"
+        sphere 20
+
+rotate_y 60
+translate_z -2000
+for I in 1..40 loop
+    translate_z 80
+    solar_system I * 10 + 120

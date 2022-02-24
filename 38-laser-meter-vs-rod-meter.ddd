@@ -1,0 +1,43 @@
+background_color "transparent"
+
+font "Arial", 36
+align 0.5
+vertical_align 0.5
+
+translate -200, -20, 0
+locally
+    color "white"
+    texture "earth.bmp"
+    rotate_x 20
+    sphere 0, 0, 0, 600
+
+locally
+    color "transparent"
+    line_color "darkred"
+    line_width 5
+    for I in 0..7 loop
+        line_arrow I * 100, 320, none, I * 100 + 90, 320, arrowhead
+
+
+locally
+    color "darkred"
+    text_box 500, 270, 300, 100,
+        text "Measurements with a laser"
+
+
+locally
+    color "transparent"
+    line_color "darkgreen"
+    line_width 5
+    for I in 0..7 loop
+        locally
+            rotate_z -I * 20
+            path
+                endpoints_style "arrowhead", "none"
+                ellipse_arc 0, 0, 620, 620, 90-18, 18
+
+
+locally
+    color "darkgreen"
+    text_box 500, 0, 300, 100,
+        text "Measurements with a metal rod"

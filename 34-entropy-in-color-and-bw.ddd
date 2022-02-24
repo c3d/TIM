@@ -1,0 +1,24 @@
+translate -400, -200, 0
+font "Arial", 15, bold
+align 0.5
+vertical_align 0.5
+
+refresh 2
+for N in -5..15 loop
+    locally
+        for B in -10..10 loop
+            if abs(B) <= exp(0.2*N)*sin(random(-N,N))+0.5 then
+                pill { if shift_modifier then "#E32" else "#888" }
+            else
+                pill { if shift_modifier then "#3E2" else "#777" }
+            translate_y 20
+    translate_x 40
+
+pill Color:text ->
+    locally
+        color Color
+        texture "AquaButton.png"
+        circle 0, 0, 10
+
+random_pill ->
+    pill (if random(-1.0, 1.0) >= 0.0 then "#3E2" else "#E32")

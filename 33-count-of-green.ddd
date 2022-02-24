@@ -1,0 +1,33 @@
+translate -620, -40, 0
+font "Arial", 15, bold
+align 0.5
+vertical_align 0.5
+
+for N in 0..31 loop
+    Green := 0
+    Red := 0
+    locally
+        for B in 0..4 loop
+            if (N and (2^B)) = 0 then
+                pill "#3E2"
+                Green := Green + 1
+            else
+                pill "#E32"
+                Red := Red + 1
+            translate_y 20
+    text_box 0, -20, 30, 30,
+        color "#3E2"
+        render Green
+    text_box 0, 100, 30, 30,
+        color "#E32"
+        render Red
+    translate_x 40
+
+pill Color:text ->
+    locally
+        color Color
+        texture "AquaButton.png"
+        circle 0, 0, 10
+
+random_pill ->
+    pill (if random(-1.0, 1.0) >= 0.0 then "#3E2" else "#E32")

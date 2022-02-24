@@ -1,0 +1,33 @@
+line_width 3
+color "transparent"
+background_color "transparent"
+font "Arial", 20
+align 0.5
+vertical_align 0.5
+
+
+for A in -5..5 loop
+    D := integer(30 + 6 * sin (A * 14.3))
+    for R in 1..D loop
+        line_color_hsv A * 11, R * 10%, 80%
+        ellipse_arc 0, -200, 30*R, 30*R, A * 20 + 90 - 2.5, 10
+
+    locally
+        translate 0, -200, 0
+        rotate_z A*20 + 90 + 2.5
+        translate_x 15 * (D + 3)
+        circle 0, 0, 40
+
+        locally
+            translate 35, -25, 0
+            rotate_z -(A*20 + 90 + 2.5)
+            line_color "transparent"
+            color_hsv A * 11, R * 10%, 70%
+            circle 0, 0, 20
+            color "white"
+            text_box 0, 0, 20, 20,
+                render 6-A
+
+        line_color_hsv A * 11, R * 10%, 90%, 60%
+        for R in 3..D-3 loop
+        ellipse_arc 0, 0, 30*R + 10, 30*R + 10, 180-2.5, 5

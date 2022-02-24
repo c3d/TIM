@@ -8,7 +8,7 @@ RX2 -> RX * 50 / S
 MX2 -> MX * 50 / S
 
 color "transparent"
-if page_number > 5 then
+if page_number > 9 then
     line_color "black"
     line_width 15
     line_arrow -450, MY * 50, NONE, 450, RY * 50, ARROWHEAD
@@ -16,15 +16,54 @@ if page_number > 5 then
 line_color "gray"
 line_width 1
 
-timeline S:integer ->
+timeline S:integer, Angle:real, Offset:real ->
     locally
         line_color "black"
         color "transparent"
         texture ""
         line_width 12
         translate_y 150
-        rotate_x -45
-        line_arrow -150 * S, 0, NONE, 150 * S, 0, ARROWHEAD
+        rotate_x Angle
+        translate_z Offset
+        line_arrow -150 * S + Offset, 0, NONE, 150 * S + Offset, 0, ARROWHEAD
+
+timeline S:integer -> timeline S, -45, 0
+
+moves S:integer ->
+    locally
+        line_color "black"
+        color "transparent"
+        texture ""
+        line_width 3
+        translate 30 * S - 150, 30 * S - 60, 0
+        line_arrow  0,  0, NONE, 60, 0, ARROWHEAD
+        line_arrow 60,  0, NONE, 60, 60, ARROWHEAD
+        line_arrow 60, 60, NONE,  0, 60, ARROWHEAD
+        line_arrow  0, 60, NONE,  0, 0, ARROWHEAD
+
+
+moves_across ->
+    locally
+        line_color "blue"
+        color "transparent"
+        texture ""
+        line_width 3
+        translate 30 * 7 - 150, 30 * 7 - 60, 0
+        line_arrow -30, -30, NONE,  30, -30, ARROWHEAD
+        line_arrow  30, -30, NONE,  30,   0, NONE
+        line_arrow -30,   0, NONE, -30,-30, ARROWHEAD
+        rotate_x -90
+        line_arrow  30,   0, NONE,  30, 30, ARROWHEAD
+        line_arrow -30,   0, NONE, -30, 30, NONE
+        line_arrow  30, 30, NONE, -30, 30, ARROWHEAD
+
+photonoid ->
+    locally
+        line_color "orange"
+        color "transparent"
+        texture ""
+        line_width 10
+        line_arrow -150, -150, NONE,  150, 150, ARROWHEAD
 
 moves S:integer ->
     locally
@@ -55,18 +94,39 @@ moves_across ->
         line_arrow  30, 30, NONE, -30, 30, ARROWHEAD
 
 page "Cubic curvature",
-    cubic_curvature false, false, false
+    cubic_curvature "bland"
 
 page "Cubic curvature with line",
-    cubic_curvature true, false, false
+    cubic_curvature "arrows"
 
 page "Cubic curvature with displacements",
-    cubic_curvature false, true, false
+    cubic_curvature "moves"
 
 page "Cubic curvature with timeline",
-    cubic_curvature false, false, true
+    cubic_curvature "timeline"
 
-cubic_curvature Line, Moves, Timelines ->
+page "Cubic divergence with timeline",
+    cubic_divergence "timeline"
+
+page "Cubic curvature with photon",
+    cubic_curvature "photon"
+
+page "Cubic curvature with photon and mass",
+    cubic_curvature "photon+mass"
+
+page "Cubic curvature with photon and mass and emission",
+    locally
+        translate -300, 0, 0
+        cubic_curvature "photon+mass"
+    locally
+        translate 300, 0, 0
+        cubic_curvature_inverse "photon+mass"
+        refresh 1
+
+MouseX -> 0.0
+MouseY -> 0.0
+
+cubic_curvature Kind ->
     frame_texture 256, 256,
         color "white"
         line_color "black"
@@ -76,8 +136,10 @@ cubic_curvature Line, Moves, Timelines ->
         scale 10
     texture_wrap true, true
     rotate_z 90
-    rotate_x mouse_y * 0.1 + 45
-    rotate_y -mouse_x * 0.1 - 45
+    MouseX := mouse_x
+    MouseY := mouse_y
+    rotate_x MouseY * 0.1 + 45
+    rotate_y -MouseX * 0.1 - 45
 
     for I in 1..3 loop
         locally
@@ -85,12 +147,12 @@ cubic_curvature Line, Moves, Timelines ->
             color_hsv 120 * I, 20%, 100%
             translate_z 150
             rectangle 300, 300
-            if Line then
+            if Kind = "arrows" or (Kind = "photon+mass" and I <> 2) then
                 timeline (if I = 1 then -1 else 1)
-            if Moves then
+            if Kind = "moves" then
                 moves I + 2
 
-            if Timelines then
+            if Kind = "timeline" then
                 locally
                     color_hsv 120 * I, 80%, 100%, 70%
                     if I = 1 then rotate_z 90
@@ -99,13 +161,125 @@ cubic_curvature Line, Moves, Timelines ->
                         rotate_z 90
                         rectangle -15, 0, 30, 300
 
-    if Moves then
+    if Kind = "moves" then
         locally
             rotate 120, 1,1,1
             translate_z 150
             moves_across
 
+    if Kind = "photon" or Kind = "photon+mass" then
+        locally
+            rotate 240, 1,1,1
+            translate_z 150
+            photonoid
 
+cubic_curvature_inverse Kind ->
+    frame_texture 256, 256,
+        color "white"
+        line_color "black"
+        line_width 4
+        rectangle 256, 256
+    texture_transform
+        scale 10
+    texture_wrap true, true
+    rotate_z 90
+    rotate_x -90
+    rotate_x MouseY * 0.1 - 45
+    rotate_y -MouseX * 0.1 - 45
+
+    for I in 1..3 loop
+        locally
+            rotate 120 * I, 1, 1, 1
+            color_hsv 120 * I, 20%, 100%
+            translate_z 150
+            rectangle 300, 300
+            if Kind = "arrows" or (Kind = "photon+mass" and I <> 2) then
+                timeline (if I = 1 then 1 else -1), -45, -25
+            if Kind = "moves" then
+                moves I + 2
+
+            if Kind = "timeline" then
+                locally
+                    color_hsv 120 * I, 80%, 100%, 70%
+                    if I = 1 then rotate_z 90
+                    rectangle -15, 0, 30, 300
+                    if I = 2 then
+                        rotate_z 90
+                        rectangle -15, 0, 30, 300
+
+    if Kind = "moves" then
+        locally
+            rotate 120, 1,1,1
+            translate_z 150
+            moves_across
+
+    if Kind = "photon" or Kind = "photon+mass" then
+        locally
+            rotate 240, 1,1,1
+            translate_z 150
+            rotate_z 180
+            photonoid
+
+divergence_adjust 1 ->
+    rotate 120, 1, 1, 1
+divergence_adjust 2 ->
+    rotate 240, 1, 1, 1
+    translate 0, 300, -300
+divergence_adjust 3 ->
+    rotate 0, 1, 1, 1
+divergence_adjust 4 ->
+    rotate 240, 1, 1, 1
+    translate 300, 0, -300
+    color_hsv 240, 20%, 100%
+divergence_adjust 5 ->
+    rotate 240, 1, 1, 1
+    translate 300, 300, -300
+    color_hsv 240, 20%, 100%
+
+cubic_divergence Kind ->
+    frame_texture 256, 256,
+        color "white"
+        line_color "black"
+        line_width 4
+        rectangle 256, 256
+    texture_transform
+        scale 10
+    texture_wrap true, true
+    rotate_z 90
+    MouseX := mouse_x
+    MouseY := mouse_y
+    rotate_x MouseY * 0.1 + 45
+    rotate_y -MouseX * 0.1 - 45
+
+    for I in 1..5 loop
+        locally
+            color_hsv 120 * I, 20%, 100%
+            divergence_adjust I
+            translate_z 150
+            rectangle 300, 300
+            if Kind = "arrows" or (Kind = "photon+mass" and I <> 2) then
+                timeline (if I = 1 then -1 else 1)
+            if Kind = "moves" then
+                moves I + 2
+
+            if Kind = "timeline" and I < 5 then
+                locally
+                    color_hsv 120 * I, 80%, 100%, 70%
+                    if I = 4 then color_hsv 240, 80%, 100%, 70%
+                    if I = 1 or I = 4 then rotate_z 90
+                    rectangle -15, 0, 30, 300
+
+    if Kind = "moves" then
+        locally
+            rotate 120, 1,1,1
+            translate_z 150
+            moves_across
+
+    if Kind = "photon" or Kind = "photon+mass" then
+        locally
+            rotate 240, 1,1,1
+            translate_z 150
+            photonoid
 
 page "Grid alone",
     grid false, false
@@ -171,6 +345,37 @@ page "Receive then emit",
 page "Receive then emit arrow",
     grid true, true, true, true
 
+page "Receive then emit arrow with colours",
+    locally
+        translate_z -2
+        color_hsv 120, 20%, 100%
+        rectangle (RX + 4) * S, (RY + 4) * S, 8 * S, 8 * S
+        color_hsv 240, 20%, 100%
+        rectangle (RX - 4) * S, (RY + 4) * S, 8 * S, 8 * S
+        rectangle (MX + 4) * S, (RY + 4) * S, 8 * S, 8 * S
+        color_hsv   0, 20%, 100%
+        rectangle (RX - 4) * S, (RY - 4) * S, 8 * S, 8 * S
+        rectangle (MX + 4) * S, (RY - 4) * S, 8 * S, 8 * S
+        color_hsv   0, 40%, 100%
+        rectangle (RX + 4) * S, (RY - 4) * S, 8 * S, 8 * S
+        color_hsv   0, 80%, 100%
+        rectangle (RX + 0) * S, (RY - 4) * S, 8 , 8 * S
+        rectangle (MX + 0) * S, (RY - 4) * S, 8 , 8 * S
+        rectangle (RX + 4) * S, (RY - 0) * S - 8, 8 * S, 8
+
+        color "transparent"
+        line_color_hsv 0, 80%, 100%
+        line_width 12
+        path
+             endpoints_style ARROWHEAD, ARROWHEAD
+             move_to RX * S + 32, (RY - 6) * S
+             quad_to 2 * S, (RY - 6) * S, 2 * S, -32
+        path
+             endpoints_style ARROWHEAD, ARROWHEAD
+             move_to MX * S - 32, (RY - 6) * S
+             quad_to -2 * S, (RY - 6) * S, -2 * S, -32
+    grid true, true, true, true
+
 page "Grid scale",
     on "pageentry",
         S := 100
@@ -214,6 +419,10 @@ page "Definition of mass",
     grid true, true, true, true
 
     locally
+        color "white"
+        rectangle (RX + MX)*S/2, -5*S, (MX - RX)*S, 10*S
+
+    locally
         line_color "brown"
         line_width 18
         line_arrow MX * 50, MY * 50, ARROWHEAD, RX * 50, RY * 50, ARROWHEAD
@@ -233,6 +442,9 @@ page "Double frequency",
         grid false, false
 
     locally
+        color "white"
+        rectangle (RX + MX)*S/2, -5*S, (MX - RX)*S, 10*S
+    locally
         line_color "brown"
         line_width 18
         line_arrow MX * 50, MY * 50, ARROWHEAD, RX * 50, RY * 50, ARROWHEAD
@@ -245,17 +457,19 @@ page "Double frequency",
         vertical_align_center
         text "m"
 
+DIAGS -> (false)
+
 grid Emit, Receive, EmitArrow, ReceiveArrow ->
     for X in -25..25 loop
-        if (not Receive or X >= RX2) and (not Emit or X <= MX2) then
+        if not DIAGS or ((not Receive or X >= RX2) and (not Emit or X <= MX2)) then
             line X * S, -W, X * S, W
-        if Receive and X  <= RX2 then
+        if Receive and DIAGS and  X  <= RX2 then
             path
                 move_to X * S, -W
                 line_to X * S, RY * S
                 line_to (X-1) * S, (RY+1) * S
                 line_to (X-1) * S, W
-        if Emit and X >= MX2 then
+        if Emit and DIAGS and X >= MX2 then
             path
                 move_to X * S, W
                 line_to X * S, MY* S
@@ -275,7 +489,7 @@ grid Emit, Receive, EmitArrow, ReceiveArrow ->
     if EmitArrow then locally
         line_color "red"
         line_width 8
-        line_arrow 50*MX + 25, 50*MY - 25, NONE, 50*MX + 250, 50*MY - 250, ARROWHEAD
+        line_arrow 50*MX + 25, 50*MY + 25, NONE, 50*MX + 250, 50*MY + 250, ARROWHEAD
     if Emit then
         color "red"
         circle 50*MX, 50*MY, 20
