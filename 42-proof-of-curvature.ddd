@@ -1,0 +1,128 @@
+background_color "transparent"
+
+page "Meridiens seuls",
+    light 0
+    light_position 400, 300, 1000
+    light_ambient "white"
+    light_specular "white"
+    light_diffuse "white"
+
+    translate 0, 0, 0
+    locally
+        color "white"
+        texture "earth.bmp"
+        rotate_x 27
+        rotate_y -10
+        sphere 0, 0, 0, 600
+
+        texture ""
+        light 0, false
+        line_width 1
+        extrude_depth 1
+        line_color "lightblue"
+        color "transparent"
+        for I in 1..24 loop
+            rotate_y 15
+            circle 0, 0, 300
+
+page "Meridiens et paralleles",
+    light 0
+    light_position 400, 300, 1000
+    light_ambient "white"
+    light_specular "white"
+    light_diffuse "white"
+
+    translate 0, 0, 0
+    locally
+        color "white"
+        texture "earth.bmp"
+        rotate_x 27
+        rotate_y -10
+        sphere 0, 0, 0, 600
+
+        texture ""
+        light 0, false
+        line_width 1
+        extrude_depth 1
+        line_color "lightblue"
+        color "transparent"
+        for I in 1..24 loop
+            rotate_y 15
+            circle 0, 0, 300
+        rotate_x 90
+        for I in 0..5 loop
+            locally
+                translate_z 300 * I / 6
+                circle 0, 0, 300 * cos(asin(I/6.0)) + 0
+                translate_z -600 * I / 6
+                circle 0, 0, 300 * cos(asin(I/6.0)) + 0
+
+
+page "Quarter circumference one",
+    light 0
+    light_position 400, 300, 1000
+    light_ambient "white"
+    light_specular "white"
+    light_diffuse "white"
+
+    translate 0, 0, 0
+    locally
+        color "white"
+        texture "earth.bmp"
+        rotate_x 27
+        rotate_y -10
+        sphere 0, 0, 0, 600
+
+        texture ""
+        light 0, false
+        line_width 15
+        color "transparent"
+        extrude_depth 0
+        line_color "green"
+        rotate_y -125
+        path
+            endpoints_style "none", "arrowhead"
+            move_to 650, 0
+            ellipse_arc 0, 0, 650, 650, 0, 90
+
+        line_color "red"
+        rotate_y 90
+        path
+            endpoints_style "arrowhead", "none"
+            move_to 650, 0
+            ellipse_arc 0, 0, 650, 650, 0, 90
+
+page "Quarter circumference two",
+    light 0
+    light_position 400, 300, 1000
+    light_ambient "white"
+    light_specular "white"
+    light_diffuse "white"
+
+    translate 0, 0, 0
+    locally
+        color "white"
+        texture "earth.bmp"
+        rotate_x 27
+        rotate_y -10
+        sphere 0, 0, 0, 600
+
+        texture ""
+        light 0, false
+        line_width 15
+        color "transparent"
+        extrude_depth 0
+        line_color "green"
+        rotate_y -125
+        rotate_x -90
+        path
+            endpoints_style "none", "arrowhead"
+            move_to 650, 0
+            ellipse_arc 0, 0, 650, 650, 0, 90
+
+        line_color "red"
+        rotate_y -90
+        path
+            endpoints_style "arrowhead", "none"
+            move_to 650, 0
+            ellipse_arc 0, 0, 650, 650, 0, 90

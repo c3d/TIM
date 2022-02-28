@@ -1,0 +1,50 @@
+color "lightyellow", 90%
+line_color "gray"
+line_width 1
+
+
+rotate_y 0.2 * mouse_x
+rotate_x 0.1 * mouse_y
+
+locally
+    color "darkblue"
+    line_color "darkblue"
+    rotate_x -90
+    translate_z 250
+    extrude_depth 500
+    circle 0, 0, 3
+    cone 0, 0, 0, 20, 20, 50
+locally
+    color "darkgreen"
+    line_color "darkgreen"
+    rotate_y -90
+    translate_z 250
+    extrude_depth 500
+    circle 0, 0, 3
+    cone 0, 0, 0, 20, 20, 50
+translate_z -900
+locally
+    color "gray"
+    translate_z 1500
+    extrude_depth 1500
+    circle 0, 0, 3
+    cone 0, 0, 0, 20, 20, 50
+
+for X in 0..300 loop
+    for N in 4..25 loop
+        color_hsv 1.33 * X, N^2 * 0.002, 80%, 80%
+        path
+            lto N, X
+            lto N, X+1
+            lto N + 1, X+1
+            lto N + 1, X
+    locally
+        line_color "red"
+        line_width 4
+        path
+            lto 20, X
+            lto 20, X+1
+
+
+lto N:integer, X:integer ->
+    line_to N * 10 * sin(X * 0.2), N * 10 * cos(X * 0.2), X * 7 - 20

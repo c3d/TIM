@@ -1,0 +1,55 @@
+
+light 0
+light_position 300, 300, 1000
+light_ambient "white"
+light_diffuse "white"
+light_specular "white"
+
+translate -250, 0, 0
+
+color "blue"
+random_dice
+
+color "red"
+random_dice
+
+color "green"
+random_dice
+
+refresh 2
+
+random_dice ->
+    translate random(100, 200), random(-50, 50), random(-50, 50)
+    locally
+        rotate_z random(-25, 25)
+        rotate_y random(-30, 30)
+        rotate_x random(-90, 90)
+        dice
+
+dice ->
+    locally
+        extrude_depth 100
+        extrude_radius 5
+        translate_z 50
+        rounded_rectangle 0, 0, 90, 90, 5
+    locally
+        color "white"
+        extrude_depth 3
+        dots  0, 0,   2#000010000       // 1
+        dots  0, 180, 2#111000111       // 6
+        dots 90,  0,  2#100000001       // 2
+        dots 90, 180, 2#101010101       // 5
+        dots 90,  90, 2#100010001       // 3
+        dots 90, -90, 2#101000101       // 4
+
+dots A, B, N ->
+    locally
+        rotate_y A
+        rotate_x B
+        translate_z 52
+        Bit := 0
+        for X in -1..1 loop
+            for Y in -1..1 loop
+                if (N and 2^Bit) > 0 then
+                    circle X * 30, Y * 30, 8
+                Bit := Bit + 1

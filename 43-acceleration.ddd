@@ -1,0 +1,16 @@
+translate -600, 0, 0
+
+for X in 0..40 loop
+    rotate_z 0.04 * X^2 * cos(X * 0.64 + 0.2)
+    rectangle 0, 0, 2, 100
+    locally
+        color "blue"
+        rectangle 25, 0, 50, 2
+    locally
+        color "green"
+        circle 0, 0, 6
+    locally
+        color "red"
+        circle 0,  50, 5
+        circle 0, -50, 5
+    translate_x 50
