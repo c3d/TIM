@@ -22,7 +22,7 @@ locally
 locally
     color "darkred"
     text_box 500, 270, 300, 100,
-        text "Measurements with a laser"
+        text "Measurements with a laser" fr "Mesure avec la lumière"
 
 
 locally
@@ -40,4 +40,19 @@ locally
 locally
     color "darkgreen"
     text_box 500, 0, 300, 100,
-        text "Measurements with a metal rod"
+        text "Measurements with a metal rod" fr "Mesure avec un bâtonnet"
+
+
+
+// ============================================================================
+//
+//    Multilingual support
+//
+// ============================================================================
+
+LANG -> "en"
+English fr French -> if LANG="fr" then French else English
+english Body -> if LANG="en" then Body
+french  Body -> if LANG="fr" then Body
+key "f" -> LANG := "fr"; refresh 0
+key "e" -> LANG := "en"; refresh 0
